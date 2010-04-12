@@ -3,7 +3,7 @@
 Plugin Name: ArcadePress
 Plugin URI: http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/
 Description: <a href="http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/" target="blank">ArcadePress</a> is an open source arcade plugin for Wordpress that allows you to turn any Wordpress site into a full arcade site, including flash game uploads, categories, highscores, game feeds & more.
-Version: 0.61
+Version: 0.62
 Author: skybox3d.com
 Author URI: http://www.skybox3d.com/
 License: GPL2
@@ -102,7 +102,9 @@ if (!class_exists("ArcadePress")) {
 			global $wpdb;
 
 			$devOptions = $this->getAdminOptions();
-			
+			if ( function_exists('current_user_can') && !current_user_can('manage_options') ) {
+				die(__('Cheatin&#8217; uh?'));
+			}
 		
 			if (isset($_POST['update_arcadePressSettings'])) {
 				if (isset($_POST['arcadePressmainpage'])) {
@@ -263,8 +265,12 @@ if (!class_exists("ArcadePress")) {
         function printAdminPageAddGames() {
 			global $wpdb, $user_level;
 
-			get_currentuserinfo();
-			if ($user_level <  8) {die('This page is not for you, but thanks for being sneaky and trying');};
+			//Apparently this code doesn't work:
+			//get_currentuserinfo();
+			//if ($user_level <  8) {die('This page is not for you, but thanks for being sneaky and trying');};
+			if ( function_exists('current_user_can') && !current_user_can('manage_options') ) {
+				die(__('Cheatin&#8217; uh?'));
+			}		
 		
 			$devOptions = $this->getAdminOptions();
 			$table_name = $wpdb->prefix . "arcadepress_games";
@@ -546,8 +552,12 @@ if (!class_exists("ArcadePress")) {
         function printAdminPageEditGames() {
 			global $wpdb, $user_level;
 
-			get_currentuserinfo();
-			if ($user_level <  8) {die('This page is not for you, but thanks for being sneaky and trying');};		
+			// Apparently this code doesn't work
+			//get_currentuserinfo();
+			//if ($user_level <  8) {die('This page is not for you, but thanks for being sneaky and trying');};		
+			if ( function_exists('current_user_can') && !current_user_can('manage_options') ) {
+				die(__('Cheatin&#8217; uh?'));
+			}			
 			
 			$table_name = $wpdb->prefix . "arcadepress_games";
 			
