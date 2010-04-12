@@ -4,7 +4,7 @@ Donate link: http://www.skybox3d.com/store/products/arcadepress-open-source-word
 Tags: arcade, game, games, gaming, cms, flash, flashgames, arcade script, arcade-script, arcadepress
 Requires at least: 2.8.0
 Tested up to: 2.9.2
-Stable tag: 0.5.3
+Stable tag: 0.6.0
 
 == Description ==
 
@@ -19,7 +19,7 @@ anything they can dream of.  To that end, we have started work on ArcadePress, a
 you can literally setup a full flash arcade website with just a few clicks of the mouse.  Combining the powers of a 
 modern PHP arcade script with extreme versatility of the Wordpress platform and it's massive developer base.
 
-Here's what we have done in version 0.5.2:
+Here's what we have done in version 0.6.0:
 * Add games from the admin panel
 * Edit games from the admin panel
 * Basic set of options including alternate content, game display options, etc.
@@ -27,7 +27,9 @@ Here's what we have done in version 0.5.2:
 * Shortcode for recent games: [arcadepress display="recentgames"]
 * Shortcode for recent games with specific number of games to pull: [arcadepress display="recentgames" quantity="25"]
 * Very basic admin dashboard widget
-* Very useless but present sidebar widget
+* Recent games sidebar widget
+* Top games sidebar widget
+* Each time a game plays it is counted
 
 ArcadePress is a *GPL licensed* arcade plugin for Wordpress which is still in very early development.  Our intended
 feature set is as follows:
@@ -106,6 +108,9 @@ from feeds, full game management, and much more.
 2. General ArcadePress options
 
 == Changelog ==
+
+= 0.6.0 =
+* Had used 0.52 instead of 0.5.2, meaning I had to go up to 0.6.0 in order for the update to show as needed in the admin panel
 
 = 0.5.3 = 
 * Added usepictures and usetext options to the recent games, and top games shortcodes.
