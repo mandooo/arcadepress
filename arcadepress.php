@@ -3,7 +3,7 @@
 Plugin Name: ArcadePress
 Plugin URI: http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/
 Description: <a href="http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/" target="blank">ArcadePress</a> is an open source arcade plugin for Wordpress that allows you to turn any Wordpress site into a full arcade site, including flash game uploads, categories, highscores, game feeds & more.
-Version: 0.52
+Version: 0.5.3
 Author: skybox3d.com
 Author URI: http://www.skybox3d.com/
 License: GPL2
@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 //Global variables:
-$arcadepress_version = 0.52;
-$arcadepress_db_version = 0.52;
+$arcadepress_version = 0.53;
+$arcadepress_db_version = 0.53;
 $APjavascriptQueue = NULL;
 
 // Pre-2.6 compatibility, which is actually frivilous since we use the 2.8+ widget technique
@@ -149,14 +149,9 @@ if (!class_exists("ArcadePress")) {
 			
 			echo '
 			<style type="text/css">
-				.arcadepressoptions {
-					float:left;
-					border:1px solid #CCCCCC;
-					padding: 8px 8px 8px 8px;
-					margin: 4px 4px 4px 4px;
+				.tableDescription {
 					width:200px;
 					max-width:200px;
-					min-height:200px;
 				}
 			</style>
 			<div class="wrap">
@@ -168,12 +163,16 @@ if (!class_exists("ArcadePress")) {
 			</div>
 			<br style="clear:both;" /><br />
 			<h2>ArcadePress General Options</h2>
+			';
 			
-			<br style="clear:both;" />
-			<div class="arcadepressoptions">
-			<h3>ArcadePress Main Page:</h3>
-			<p>You need to use a Page as the base for ArcadePress.  Insert the POST ID of that page here:</p>
-			<select name="arcadePressmainpage"> 
+			echo '<table class="widefat">
+			<thead><tr><th>Option</th><th>Description</th><th>Value</th></tr></thead><tbody>
+			';			
+
+			echo '
+			<tr><td><h3>ArcadePress Main Page:</h3></td>
+			<td class="tableDescription"><p>You need to use a Page as the base for ArcadePress.  Insert the POST ID of that page here:</p></td>
+			<td><select name="arcadePressmainpage"> 
 			 <option value="">
 						';
 			  attribute_escape(__('Select page')); 
@@ -193,48 +192,59 @@ if (!class_exists("ArcadePress")) {
 
 			echo '
 			</select>
+			</td></tr>
 
-			</div>
-			<div class="arcadepressoptions">
-			<h3>Turn ArcadePress on?</h3>
-			<p>Selecting "No" will turn off ArcadePress, but will not deactivate it.</p>
-			<p><label for="turnArcadePressOn_yes"><input type="radio" id="turnArcadePressOn_yes" name="turnArcadePressOn" value="true" '; if ($devOptions['turnon_arcadepress'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="turnArcadePressOn_no"><input type="radio" id="turnArcadePressOn_no" name="turnArcadePressOn" value="false" '; if ($devOptions['turnon_arcadepress'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>
-			</div>
-			<div class="arcadepressoptions">
-			<h3>Required Flash Player version:</h3>
-			<input type="text" name="arcadePressrequired_player_version" style="width: 88px;" value="'; _e(apply_filters('format_to_edit',$devOptions['required_player_version']), 'ArcadePress'); echo'" />  Example: <i>8.0.0</i>
-			</div><div class="arcadepressoptions" style="display:none;">
-			<h3>Allow fullscreen?</h3>
-			<p><label for="allowfullscreen_yes"><input type="radio" id="allowfullscreen_yes" name="allowfullscreen" value="true" '; if ($devOptions['allowfullscreen'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="allowfullscreen_no"><input type="radio" id="allowfullscreen_no" name="allowfullscreen" value="false" '; if ($devOptions['allowfullscreen'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>
-			</div>
-			<div class="arcadepressoptions">
-			<h3>Flash WMODE:</h3>
-			<input type="text" name="arcadePresswmode" style="width: 80%;" value="'; _e(apply_filters('format_to_edit',$devOptions['wmode']), 'ArcadePress'); echo'" />
-			</div>
-			<div class="arcadepressoptions">
-			<h3>Show to users who need to upgrade their Flash player:</h3>
-			<input type="text" name="arcadePressexpress_install_swf" style="width: 80%;" value="'; _e(apply_filters('format_to_edit',$devOptions['express_install_swf']), 'ArcadePress'); echo'" />
-			</div>
-			<div class="arcadepressoptions">
-			<h3>Alternative text when Flash is not activated or installed:</h3>
-			<textarea name="arcadePressalt" style="width: 80%; height: 80px;">'; _e(apply_filters('format_to_edit',$devOptions['alt']), 'ArcadePress'); echo'</textarea>
-			</div>
+			<tr><td><h3>Turn ArcadePress on?</h3></td>
+			<td class="tableDescription"><p>Selecting "No" will turn off ArcadePress, but will not deactivate it.</p></td>
+			<td><p><label for="turnArcadePressOn_yes"><input type="radio" id="turnArcadePressOn_yes" name="turnArcadePressOn" value="true" '; if ($devOptions['turnon_arcadepress'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="turnArcadePressOn_no"><input type="radio" id="turnArcadePressOn_no" name="turnArcadePressOn" value="false" '; if ($devOptions['turnon_arcadepress'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p></td>
+			</td></tr>
+
+			<tr><td><h3>Required Flash Player version</h3></td>
+			<td class="tableDescription">The minimum version of Flash required to play any game.</td>
+			<td><input type="text" name="arcadePressrequired_player_version" style="width: 88px;" value="'; _e(apply_filters('format_to_edit',$devOptions['required_player_version']), 'ArcadePress'); echo'" />  Example: <i>8.0.0</i></td>
+			</tr>
+			
+			<tr style="display:none;"><td><h3>Allow fullscreen?</h3></td>
+			<td class="tableDescription"></td>
+			<td><p><label for="allowfullscreen_yes"><input type="radio" id="allowfullscreen_yes" name="allowfullscreen" value="true" '; if ($devOptions['allowfullscreen'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="allowfullscreen_no"><input type="radio" id="allowfullscreen_no" name="allowfullscreen" value="false" '; if ($devOptions['allowfullscreen'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>
+			</td></tr>
+
+			<tr><td><h3>Flash WMODE</h3></td>
+			<td class="tableDescription"><p>The wmode value when embedding Flash.</p></td>
+			<td><input type="text" name="arcadePresswmode" style="width: 80%;" value="'; _e(apply_filters('format_to_edit',$devOptions['wmode']), 'ArcadePress'); echo'" />
+			</td></tr>
+
+			<tr><td><h3>URL to Express Install</h3></td>
+			<td class="tableDescription"><p>This Flash file allows easy upgrading of Flash.</p></td>
+			<td><input type="text" name="arcadePressexpress_install_swf" style="width: 80%;" value="'; _e(apply_filters('format_to_edit',$devOptions['express_install_swf']), 'ArcadePress'); echo'" />
+			</td></tr>
+
+			<tr><td><h3>Alternative Text</h3></td>
+			<td class="tableDescription"><p>Alternative text when Flash is not activated or installed, or if the game is missing.</p></td>
+			<td><textarea name="arcadePressalt" style="width: 80%; height: 80px;">'; _e(apply_filters('format_to_edit',$devOptions['alt']), 'ArcadePress'); echo'</textarea>
+			</td></tr>
+			</table>
 			<br style="clear:both;" /><br />
-			<h2>Game Options</h2>
-			<div class="arcadepressoptions">
-			<h3>Flash Games Default Width & Height:</h3>
-			Width: <input type="text" name="arcadePresswidth" style="width: 58px;" value="'; _e(apply_filters('format_to_edit',$devOptions['width']), 'ArcadePress'); echo'" />  <br />Height: <input type="text" name="arcadePressheight" style="width: 58px;" value="'; _e(apply_filters('format_to_edit',$devOptions['height']), 'ArcadePress'); echo'" />
-			</div>
-			<div class="arcadepressoptions">
-			<h3>Display thumbnail under game?</h3>
-			<p>If set to Yes, the thumbnail for the game will be displayed underneath the game itself</p>
-			<p><label for="showgamethumbnail"><input type="radio" id="showgamethumbnail_yes" name="showgamethumbnail" value="true" '; if ($devOptions['showgamethumbnail'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="showgamethumbnail_no"><input type="radio" id="showgamethumbnail_no" name="showgamethumbnail" value="false" '; if ($devOptions['showgamethumbnail'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>
-			</div>
-			<div class="arcadepressoptions">
-			<h3>Display description under game?</h3>
-			<p>If set to Yes, the description for the game is written underneath the game, after the thumbnail.</p>
-			<p><label for="showgamedescription"><input type="radio" id="showgamedescription_yes" name="showgamedescription" value="true" '; if ($devOptions['showgamedescription'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="showgamedescription_no"><input type="radio" id="showgamedescription_no" name="showgamedescription" value="false" '; if ($devOptions['showgamedescription'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>
-			</div>			
+			<h2>Game Display Options</h2>';
+			
+			echo '<table class="widefat">
+			<thead><tr><th>Option</th><th>Description</th><th>Value</th></tr></thead><tbody>
+
+			<tr><td><h3>Default Width & Height</h3></td>
+			<td class="tableDescription"><p>All this value does is determine what is in the width and height field by default when you visit the Add New Game admin page.</p></td>
+			<td>Width: <input type="text" name="arcadePresswidth" style="width: 58px;" value="'; _e(apply_filters('format_to_edit',$devOptions['width']), 'ArcadePress'); echo'" />  <br />Height: <input type="text" name="arcadePressheight" style="width: 58px;" value="'; _e(apply_filters('format_to_edit',$devOptions['height']), 'ArcadePress'); echo'" />
+			</td></tr>
+
+			<tr><td><h3>Display thumbnail under game?</h3></td>
+			<td class="tableDescription"><p>If set to Yes, the thumbnail for the game will be displayed underneath the game itself</p></td>
+			<td><p><label for="showgamethumbnail"><input type="radio" id="showgamethumbnail_yes" name="showgamethumbnail" value="true" '; if ($devOptions['showgamethumbnail'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="showgamethumbnail_no"><input type="radio" id="showgamethumbnail_no" name="showgamethumbnail" value="false" '; if ($devOptions['showgamethumbnail'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>		
+			</td></tr>
+
+			<tr><td><h3>Display description under game?</h3></td>
+			<td class="tableDescription"><p>If set to Yes, the description for the game is written underneath the game, after the thumbnail.</p></td>
+			<td><p><label for="showgamedescription"><input type="radio" id="showgamedescription_yes" name="showgamedescription" value="true" '; if ($devOptions['showgamedescription'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="showgamedescription_no"><input type="radio" id="showgamedescription_no" name="showgamedescription" value="false" '; if ($devOptions['showgamedescription'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>
+			</td></tr>
+			</table>
 			
 			<br style="clear:both;" /><br />
 			<div class="submit">
@@ -640,10 +650,19 @@ if (!class_exists("ArcadePress")) {
 				$totalrecords = 0;
 			}
 			
+			$totalgameplayssql = "SELECT SUM(`gameplays`)  AS num FROM `{$table_name}`;";
+			$totalgameplaysres = $wpdb->get_results( $totalgameplayssql , ARRAY_A );
+			if(isset($totalgameplaysres)) {
+				$totalgameplays = $totalgameplaysres[0]['num'];		
+			} else {
+				$totalgameplays = 0;
+			}			
+			
 			$permalink = get_permalink( $devOptions['mainpage'] );
 			
-			echo '<h4>ArcadePress main page: <a href="'.$permalink.'" target="_blank">here</a></h4>';
-			echo "<h4>Games installed: {$totalrecords} </h4>";
+			echo '<p>ArcadePress main page: <a href="'.$permalink.'" target="_blank">here</a></p>';
+			echo "<p>Games installed: {$totalrecords} </p>";
+			echo "<p>Number of times games played: {$totalgameplays}</p>";
 		} 
 		
 		// Create the function use in the action hook
@@ -710,10 +729,11 @@ if (!class_exists("ArcadePress")) {
 			$devOptions = $this->getAdminOptions();		
 		
 			extract(shortcode_atts(array(
-				'display' => 'mainpage',
+				'display' => 'categories',
 				'primkey' => '0',
 				'quantity' => '10',
-				'options' => '',
+				'usetext' => 'true',
+				'usepictures' => 'false',
 			), $atts));
 
 			$output = '';
@@ -725,13 +745,37 @@ if (!class_exists("ArcadePress")) {
 						if(isset($results)) {
 							foreach ($results as $result) {
 								$permalink = get_permalink( $result['postid'] ); // Grab the permalink based on the post id associated with the game
-								$output .= '<p><a href="'.$permalink.'">'.$result['name'].'</a></p>';
+								if($usepictures=='true') {
+									$output .= '<a href="'.$permalink.'"><img src="'.$result['thumbnail'].'" alt="'.$result['name'].'" /></a>';
+								}
+								if($usetext=='true') {
+									$output .= '<p><a href="'.$permalink.'">'.$result['name'].'</a></p>';
+								}
 							}
 						}
 					} else {
 						$output .= 'ArcadePress did not like your recentgames shortcode!  The quantity field contained non-numeric data. Please fix your page or consult the ArcadePress documentation for help.';
 					}
 					break;
+				case 'topgames': // Top game shortcode =========================================================
+					if(is_numeric($quantity)){
+						$sql = "SELECT * FROM `{$table_name}` ORDER BY `gameplays` DESC LIMIT 0, {$quantity};";
+						$results = $wpdb->get_results( $sql , ARRAY_A );
+						if(isset($results)) {
+							foreach ($results as $result) {
+								$permalink = get_permalink( $result['postid'] ); // Grab the permalink based on the post id associated with the game
+								if($usepictures=='true') {
+									$output .= '<a href="'.$permalink.'"><img src="'.$result['thumbnail'].'" alt="'.$result['name'].'" /></a>';
+								}
+								if($usetext=='true') {
+									$output .= '<p><a href="'.$permalink.'">'.$result['name'].'</a></p>';
+								}
+							}
+						}
+					} else {
+						$output .= 'ArcadePress did not like your topgames shortcode!  The quantity field contained non-numeric data. Please fix your page or consult the ArcadePress documentation for help.';
+					}
+					break;					
 				case 'categories': // Categories shortcode =========================================================
 					$output .= "Game categories";
 					break;
@@ -740,6 +784,9 @@ if (!class_exists("ArcadePress")) {
 						$sql = "SELECT * FROM `{$table_name}` WHERE `primkey`={$primkey};";
 						$results = $wpdb->get_results( $sql , ARRAY_A );			
 						if(isset($results)) {
+							$newGamePlayValue = $results[0]['gameplays'] + 1; // Increment the play counter
+							$updatedSQL = "UPDATE `{$table_name}` SET `gameplays` = '{$newGamePlayValue}' WHERE `primkey` ={$primkey} LIMIT 1 ;";
+							$wpdb->query($updatedSQL);
 							$output .= '
 							  <script type="text/javascript">
 								//<![CDATA[
@@ -908,7 +955,7 @@ if (!class_exists("ArcadePress")) {
 					upload_url : "'.WP_PLUGIN_URL.'/arcadepress/php/upload.php", 
 					post_params: {"PHPSESSID" : "'.session_id().'"},
 					flash_url : "'.get_option( 'siteurl' ).'/wp-includes/js/swfupload/swfupload.swf", 
-					file_size_limit : "10 MB",
+					file_size_limit : "200 MB",
 					file_types : "*.jpg;*.gif;*.png;",
 					file_types_description : "Image files",
 					file_upload_limit : "1",
@@ -966,27 +1013,119 @@ if (class_exists("WP_Widget")) {
 
 		/** @see WP_Widget::widget */
 		function widget($args, $instance) {		
+			global $wpdb;
+			$table_name = $wpdb->prefix . "arcadepress_games";
+		
 			extract( $args );
 			$title = apply_filters('widget_title', $instance['title']);
+			$numberOfGamesToDisplay = empty($instance['numberOfGamesToDisplay']) ? '10' : $instance['numberOfGamesToDisplay'];
+			$widgetShowGameImages = empty($instance['widgetShowGameImages']) ? 'false' : $instance['widgetShowGameImages'];
+
 			echo $before_widget;
 			if ( $title ) { echo $before_title . $title . $after_title; }
-			echo 'ArcadePress Stuff goes here';
+			if(is_numeric($numberOfGamesToDisplay)){
+				$sql = "SELECT * FROM `{$table_name}` ORDER BY `gameplays` DESC LIMIT 0, {$numberOfGamesToDisplay};";
+				$results = $wpdb->get_results( $sql , ARRAY_A );
+				if(isset($results)) {
+					foreach ($results as $result) {
+						$permalink = get_permalink( $result['postid'] ); // Grab the permalink based on the post id associated with the game
+						if($widgetShowGameImages=='true') {
+							$output .= '<a href="'.$permalink.'"><img src="'.$result['thumbnail'].'" alt="'.$result['name'].'" /></a>';
+						}
+						$output .= '<p><a href="'.$permalink.'">'.$result['name'].'</a></p>';
+					}
+				}
+			} else {
+				$output .= 'ArcadePress did not like your widget!  The number of games to display contained non-numeric data. Please fix your widget or consult the ArcadePress documentation for help.';
+			}
+			echo $output;
 			echo $after_widget;
 		}
 
 		/** @see WP_Widget::update */
-		function update($new_instance, $old_instance) {				
-			return $new_instance;
+		function update($new_instance, $old_instance) {	
+			$instance['title']= strip_tags(stripslashes($new_instance['title']));
+			$instance['numberOfGamesToDisplay'] = strip_tags(stripslashes($new_instance['numberOfGamesToDisplay']));
+			$instance['widgetShowGameImages'] = strip_tags(stripslashes($new_instance['widgetShowGameImages']));
+
+			return $instance;
 		}
 
 		/** @see WP_Widget::form */
 		function form($instance) {				
 			$title = esc_attr($instance['title']);
-			echo	'<p><label for="'. $this->get_field_id('title') .'">'; _e('Title:'); echo ' <input class="widefat" id="'. $this->get_field_id('title') .'" name="'. $this->get_field_name('title') .'" type="text" value="'. $title .'" /></label></p>';
+			$numberOfGamesToDisplay = htmlspecialchars($instance['numberOfGamesToDisplay']);
+			$widgetShowGameImages = htmlspecialchars($instance['widgetShowGameImages']);
 
+			echo '<p><label for="'. $this->get_field_id('title') .'">'; _e('Title:'); echo ' <input class="widefat" id="'. $this->get_field_id('title') .'" name="'. $this->get_field_name('title') .'" type="text" value="'. $title .'" /></label></p>';
+			echo '<p style="text-align:left;"><label for="' . $this->get_field_name('numberOfGamesToDisplay') . '">' . __('Number of games to display:') . ' <input style="width: 80px;" id="' . $this->get_field_id('numberOfGamesToDisplay') . '" name="' . $this->get_field_name('numberOfGamesToDisplay') . '" type="text" value="' . $numberOfGamesToDisplay . '" /></label></p>';
+			//echo '<p style="text-align:left;"><label for="' . $this->get_field_name('widgetShowGameImages') . '">' . __('Show images:') . ' <input style="width: 200px;" id="' . $this->get_field_id('widgetShowGameImages') . '" name="' . $this->get_field_name('widgetShowGameImages') . '" type="text" value="' . $widgetShowGameImages . '" /></label></p>';
+			echo '<p><label for="' . $this->get_field_name('widgetShowGameImages') . '">' . __('Show images:') . '<label for="' . $this->get_field_name('widgetShowGameImages') . '_yes"><input type="radio" id="' . $this->get_field_id('widgetShowGameImages') . '_yes" name="' . $this->get_field_name('widgetShowGameImages') . '" value="true" '; if ($widgetShowGameImages == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="' . $this->get_field_name('widgetShowGameImages') . '_no"><input type="radio" id="' . $this->get_field_id('widgetShowGameImages') . '_no" name="' . $this->get_field_name('widgetShowGameImages') . '" value="false" '; if ($widgetShowGameImages == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>';
 		}
 
 	} 
+	
+	class ArcadePressRecentGamesWidget extends WP_Widget {
+		/** constructor */
+		function ArcadePressRecentGamesWidget() {
+			parent::WP_Widget(false, $name = 'ArcadePress Recent Games');	
+		}
+
+		/** @see WP_Widget::widget */
+		function widget($args, $instance) {		
+			global $wpdb;
+			$table_name = $wpdb->prefix . "arcadepress_games";
+		
+			extract( $args );
+			$title = apply_filters('widget_title', $instance['title']);
+			$numberOfGamesToDisplay = empty($instance['numberOfGamesToDisplay']) ? '10' : $instance['numberOfGamesToDisplay'];
+			$widgetShowGameImages = empty($instance['widgetShowGameImages']) ? 'false' : $instance['widgetShowGameImages'];
+
+			echo $before_widget;
+			if ( $title ) { echo $before_title . $title . $after_title; }
+			if(is_numeric($numberOfGamesToDisplay)){
+				$sql = "SELECT * FROM `{$table_name}` ORDER BY `dateadded` DESC LIMIT 0, {$numberOfGamesToDisplay};";
+				$results = $wpdb->get_results( $sql , ARRAY_A );
+				if(isset($results)) {
+					foreach ($results as $result) {
+						$permalink = get_permalink( $result['postid'] ); // Grab the permalink based on the post id associated with the game
+						if($widgetShowGameImages=='true') {
+							$output .= '<a href="'.$permalink.'"><img src="'.$result['thumbnail'].'" alt="'.$result['name'].'" /></a>';
+						}
+						$output .= '<p><a href="'.$permalink.'">'.$result['name'].'</a></p>';
+					}
+				}
+			} else {
+				$output .= 'ArcadePress did not like your widget!  The number of games to display contained non-numeric data. Please fix your widget or consult the ArcadePress documentation for help.';
+			}
+			echo $output;
+			echo $after_widget;
+		}
+
+		/** @see WP_Widget::update */
+		function update($new_instance, $old_instance) {	
+			$instance['title']= strip_tags(stripslashes($new_instance['title']));
+			$instance['numberOfGamesToDisplay'] = strip_tags(stripslashes($new_instance['numberOfGamesToDisplay']));
+			$instance['widgetShowGameImages'] = strip_tags(stripslashes($new_instance['widgetShowGameImages']));
+
+			return $instance;
+		}
+
+		/** @see WP_Widget::form */
+		function form($instance) {				
+			$title = esc_attr($instance['title']);
+			$numberOfGamesToDisplay = htmlspecialchars($instance['numberOfGamesToDisplay']);
+			$widgetShowGameImages = htmlspecialchars($instance['widgetShowGameImages']);
+
+			echo '<p><label for="'. $this->get_field_id('title') .'">'; _e('Title:'); echo ' <input class="widefat" id="'. $this->get_field_id('title') .'" name="'. $this->get_field_name('title') .'" type="text" value="'. $title .'" /></label></p>';
+			echo '<p style="text-align:left;"><label for="' . $this->get_field_name('numberOfGamesToDisplay') . '">' . __('Number of games to display:') . ' <input style="width: 80px;" id="' . $this->get_field_id('numberOfGamesToDisplay') . '" name="' . $this->get_field_name('numberOfGamesToDisplay') . '" type="text" value="' . $numberOfGamesToDisplay . '" /></label></p>';
+			//echo '<p style="text-align:left;"><label for="' . $this->get_field_name('widgetShowGameImages') . '">' . __('Show images:') . ' <input style="width: 200px;" id="' . $this->get_field_id('widgetShowGameImages') . '" name="' . $this->get_field_name('widgetShowGameImages') . '" type="text" value="' . $widgetShowGameImages . '" /></label></p>';
+			echo '<p><label for="' . $this->get_field_name('widgetShowGameImages') . '">' . __('Show images:') . '<label for="' . $this->get_field_name('widgetShowGameImages') . '_yes"><input type="radio" id="' . $this->get_field_id('widgetShowGameImages') . '_yes" name="' . $this->get_field_name('widgetShowGameImages') . '" value="true" '; if ($widgetShowGameImages == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="' . $this->get_field_name('widgetShowGameImages') . '_no"><input type="radio" id="' . $this->get_field_id('widgetShowGameImages') . '_no" name="' . $this->get_field_name('widgetShowGameImages') . '" value="false" '; if ($widgetShowGameImages == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p>';
+		}
+
+	} 	
+	
+	
 }
 /**
  * ===============================================================================================================
@@ -1038,6 +1177,7 @@ if (isset($arcadePress)) {
 	add_action('wp_dashboard_setup', array(&$arcadePress, 'arcadepress_main_add_dashboard_widgets') ); // Dashboard widget
     add_action('wp_head', array(&$arcadePress, 'addHeaderCode'), 1); // Place ArcadePress comment into header
     add_action('widgets_init', create_function('', 'return register_widget("ArcadePressTopGamesWidget");')); // Register the widget: ArcadePressTopGamesWidget
+	add_action('widgets_init', create_function('', 'return register_widget("ArcadePressRecentGamesWidget");')); // Register the widget: ArcadePressRecentGamesWidget
 	add_shortcode('arcadepress', array(&$arcadePress, 'arcadepress_mainshortcode'));
 	add_action('admin_head', array(&$arcadePress, 'placeAdminHeaderCode'), 1); // Place ArcadePress comment into header
  

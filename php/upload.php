@@ -6,11 +6,7 @@ if (!function_exists('add_action'))
 	
 }
 
-// Let's restrict non-admin users from uploading
-global $user_level;
-get_currentuserinfo();
-if ($user_level <  8) {die('This page is not for you, but thanks for being sneaky and trying');};	
-	
+
 error_reporting(0);
 if (isset($arcadePress)) {
 
