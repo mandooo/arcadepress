@@ -3,7 +3,7 @@
 Plugin Name: ArcadePress
 Plugin URI: http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/
 Description: <a href="http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/" target="blank">ArcadePress</a> is an open source arcade plugin for Wordpress that allows you to turn any Wordpress site into a full arcade site, including flash game uploads, categories, highscores, game feeds & more.
-Version: 0.6.0
+Version: 0.61
 Author: skybox3d.com
 Author URI: http://www.skybox3d.com/
 License: GPL2
@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 //Global variables:
-$arcadepress_version = 0.6;
-$arcadepress_db_version = 0.6;
+$arcadepress_version = 0.61;
+$arcadepress_db_version = 0.61;
 $APjavascriptQueue = NULL;
 
 // Pre-2.6 compatibility, which is actually frivilous since we use the 2.8+ widget technique
