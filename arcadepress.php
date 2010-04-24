@@ -3,7 +3,7 @@
 Plugin Name: ArcadePress
 Plugin URI: http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/
 Description: <a href="http://www.skybox3d.com/store/products/arcadepress-open-source-wordpress-plugin-php-arcade-script/" target="blank">ArcadePress</a> is an open source arcade plugin for Wordpress that allows you to turn any Wordpress site into a full arcade site, including flash game uploads, categories, highscores, game feeds & more.
-Version: 0.62
+Version: 0.65
 Author: skybox3d.com
 Author URI: http://www.skybox3d.com/
 License: GPL2
@@ -27,8 +27,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 //Global variables:
-$arcadepress_version = 0.61;
-$arcadepress_db_version = 0.61;
+$arcadepress_version = 0.65;
+$arcadepress_db_version = 0.65;
 $APjavascriptQueue = NULL;
 
 // Pre-2.6 compatibility, which is actually frivilous since we use the 2.8+ widget technique
@@ -85,7 +85,8 @@ if (!class_exists("ArcadePress")) {
 									'allowfullscreen' => 'true',
 									'wmode' => 'window',
 									'showgamethumbnail' => 'true',
-									'showgamedescription' => 'true'
+									'showgamedescription' => 'true',
+									'creategameundercategory' => 'false'
 									);									
 
             $devOptions = get_option($this->adminOptionsName);
@@ -140,7 +141,9 @@ if (!class_exists("ArcadePress")) {
 				if (isset($_POST['showgamedescription'])) {
 					$devOptions['showgamedescription'] = $wpdb->escape($_POST['showgamedescription']);
 				}				
-				
+				if (isset($_POST['creategameundercategory'])) {
+					$devOptions['creategameundercategory'] = $wpdb->escape($_POST['creategameundercategory']);
+				}					
 				update_option($this->adminOptionsName, $devOptions);
 			   
 				echo '<div class="updated"><p><strong>';
@@ -152,8 +155,8 @@ if (!class_exists("ArcadePress")) {
 			echo '
 			<style type="text/css">
 				.tableDescription {
-					width:200px;
-					max-width:200px;
+					width:350px;
+					max-width:350px;
 				}
 			</style>
 			<div class="wrap">
@@ -196,11 +199,17 @@ if (!class_exists("ArcadePress")) {
 			</select>
 			</td></tr>
 
+			<tr><td><h3>Use categories?</h3></td>
+			<td class="tableDescription"><p>Selecting "No" means all games will be child pages of the Main Page, and no category functions will be available. Selecting "Yes" means that all games will be children pages of the main category you select for a game (example, if a game\'s main category is Action, then your game would listed as a child of the page Action, which itself would be a child of Main Page, i.e. MainPage > Action > YourGame)</p></td>
+			<td><p><label for="creategameundercategory_yes"><input type="radio" id="creategameundercategory_yes" name="creategameundercategory" value="true" '; if ($devOptions['creategameundercategory'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="creategameundercategory_no"><input type="radio" id="creategameundercategory_no" name="creategameundercategory" value="false" '; if ($devOptions['creategameundercategory'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p></td>
+			</td></tr>						
+			
 			<tr><td><h3>Turn ArcadePress on?</h3></td>
 			<td class="tableDescription"><p>Selecting "No" will turn off ArcadePress, but will not deactivate it.</p></td>
 			<td><p><label for="turnArcadePressOn_yes"><input type="radio" id="turnArcadePressOn_yes" name="turnArcadePressOn" value="true" '; if ($devOptions['turnon_arcadepress'] == "true") { _e('checked="checked"', "ArcadePress"); }; echo '/> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="turnArcadePressOn_no"><input type="radio" id="turnArcadePressOn_no" name="turnArcadePressOn" value="false" '; if ($devOptions['turnon_arcadepress'] == "false") { _e('checked="checked"', "ArcadePress"); }; echo '/> No</label></p></td>
 			</td></tr>
 
+	
 			<tr><td><h3>Required Flash Player version</h3></td>
 			<td class="tableDescription">The minimum version of Flash required to play any game.</td>
 			<td><input type="text" name="arcadePressrequired_player_version" style="width: 88px;" value="'; _e(apply_filters('format_to_edit',$devOptions['required_player_version']), 'ArcadePress'); echo'" />  Example: <i>8.0.0</i></td>
@@ -388,7 +397,33 @@ if (!class_exists("ArcadePress")) {
 					$my_post['post_content'] = '';
 					$my_post['post_status'] = 'draft';
 					$my_post['post_author'] = 1;
-					$my_post['post_parent'] = $devOptions['mainpage'];
+					
+					// Create the page as either directly under the main page or underneath a category page
+					if($devOptions['creategameundercategory']==false) {
+						$my_post['post_parent'] = $devOptions['mainpage'];
+					} else {
+						$theCategories = explode(',',$arcadePressgame_tags);
+						
+						if(isset($theCategories[0])) {
+							$catSQL = "SELECT `ID` FROM `{$wpdb->prefix}posts` WHERE `post_title` LIKE '%{$theCategories[0]}%' AND `post_parent`={$devOptions['mainpage']} AND `post_status`='publish';";
+							$catResults = $wpdb->get_results( $catSQL , ARRAY_A );	
+							if(!isset($catResults[0]['ID'])) {
+								$my_cat_post = array();
+								$my_cat_post['post_title'] = stripslashes($theCategories[0]);
+								$my_cat_post['post_type'] = 'page';
+								$my_cat_post['post_content'] = '[arcadepress category="'.stripslashes($theCategories[0]).'"]';
+								$my_cat_post['post_status'] = 'publish';
+								$my_cat_post['post_author'] = 1;	
+								$my_cat_post['post_parent'] = $devOptions['mainpage'];
+								$theCatPostID = wp_insert_post( $my_cat_post );
+							} else {
+								$theCatPostID = $catResults[0]['ID'];
+							}
+							$my_post['post_parent'] = $theCatPostID;
+						} else {
+							$my_post['post_parent'] = $devOptions['mainpage'];
+						}
+					}
 
 					// Insert the PAGE into the WP database
 					$thePostID = wp_insert_post( $my_post );	
@@ -744,9 +779,29 @@ if (!class_exists("ArcadePress")) {
 				'quantity' => '10',
 				'usetext' => 'true',
 				'usepictures' => 'false',
+				'category' => ''
 			), $atts));
 
 			$output = '';
+			if($category!='') {
+				if(is_numeric($quantity)){
+					$sql = "SELECT * FROM `{$table_name}` WHERE `tags` LIKE '%{$category}%' ORDER BY `dateadded` DESC LIMIT 0, {$quantity};";
+					$results = $wpdb->get_results( $sql , ARRAY_A );
+					if(isset($results)) {
+						foreach ($results as $result) {
+							$permalink = get_permalink( $result['postid'] ); // Grab the permalink based on the post id associated with the game
+							if($usepictures=='true') {
+								$output .= '<a href="'.$permalink.'"><img src="'.$result['thumbnail'].'" alt="'.$result['name'].'" /></a>';
+							}
+							if($usetext=='true') {
+								$output .= '<p><a href="'.$permalink.'">'.$result['name'].'</a></p>';
+							}
+						}
+					}
+				} else {
+					$output .= 'ArcadePress did not like your category shortcode!  The quantity field contained non-numeric data. Please fix your page or consult the ArcadePress documentation for help.';
+				}				
+			}
 			switch ($display) {
 				case 'recentgames': // Recent game shortcode =========================================================
 					if(is_numeric($quantity)){
@@ -787,7 +842,20 @@ if (!class_exists("ArcadePress")) {
 					}
 					break;					
 				case 'categories': // Categories shortcode =========================================================
-					$output .= "Game categories";
+					if($devOptions['creategameundercategory']==true) {
+						$sql = "SELECT `ID`, `post_title` FROM `{$wpdb->prefix}posts` WHERE `post_parent`={$devOptions['mainpage']} AND `post_status`='publish' ORDER BY `post_title` ASC";
+						$results = $wpdb->get_results( $sql , ARRAY_A );
+						if(isset($results)) {
+							$output .= '<ul>';
+							foreach ($results as $result) {
+								$permalink = get_permalink( $result['ID'] ); // Grab the permalink based on the post id associated with the game
+								$output .= '<li><a href="'.$permalink.'">'.$result['post_title'].'</a></li>';
+							}
+							$output .= '</ul>';
+						}		
+					} else {
+						$output .= 'ArcadePress is configured to not use categories.';
+					}
 					break;
 				case 'game': // Individual game shortcode =========================================================
 					if(isset($primkey) && is_numeric($primkey)) {
@@ -1142,6 +1210,63 @@ if (class_exists("WP_Widget")) {
  * END ArcadePressTopGamesWidget SIDEBAR WIDGET
  */
 
+ /**
+ * ===============================================================================================================
+ * ArcadePressCategoryGamesWidget SIDEBAR WIDGET
+ */
+if (class_exists("WP_Widget")) {
+	class ArcadePressCategoryGamesWidget extends WP_Widget {
+		/** constructor */
+		function ArcadePressCategoryGamesWidget() {
+			parent::WP_Widget(false, $name = 'ArcadePress Category List');	
+		}
+
+		/** @see WP_Widget::widget */
+		function widget($args, $instance) {		
+			global $wpdb, $arcadePress;
+
+			$devOptions = $arcadePress->getAdminOptions();
+		
+			extract( $args );
+			$title = apply_filters('widget_title', $instance['title']);
+
+			echo $before_widget;
+			if ( $title ) { echo $before_title . $title . $after_title; }
+			if($devOptions['creategameundercategory']==true) {
+				$sql = "SELECT `ID`, `post_title` FROM `{$wpdb->prefix}posts` WHERE `post_parent`={$devOptions['mainpage']} AND `post_status`='publish' ORDER BY `post_title` ASC";
+				$results = $wpdb->get_results( $sql , ARRAY_A );
+				if(isset($results)) {
+					$output .= '<ul>';
+					foreach ($results as $result) {
+						$permalink = get_permalink( $result['ID'] ); // Grab the permalink based on the post id associated with the game
+						$output .= '<li><a href="'.$permalink.'">'.$result['post_title'].'</a></li>';
+					}
+					$output .= '</ul>';
+				}	
+			} else {
+				$output .= 'ArcadePress is configured to not use categories.';
+			}				
+			echo $output;
+			echo $after_widget;
+		}
+
+		/** @see WP_Widget::update */
+		function update($new_instance, $old_instance) {	
+			$instance['title']= strip_tags(stripslashes($new_instance['title']));
+
+			return $instance;
+		}
+
+		/** @see WP_Widget::form */
+		function form($instance) {				
+			$title = esc_attr($instance['title']);
+
+			echo '<p><label for="'. $this->get_field_id('title') .'">'; _e('Title:'); echo ' <input class="widefat" id="'. $this->get_field_id('title') .'" name="'. $this->get_field_name('title') .'" type="text" value="'. $title .'" /></label></p>';
+		}
+
+	}
+}	
+ 
  
  
  
@@ -1188,6 +1313,7 @@ if (isset($arcadePress)) {
     add_action('wp_head', array(&$arcadePress, 'addHeaderCode'), 1); // Place ArcadePress comment into header
     add_action('widgets_init', create_function('', 'return register_widget("ArcadePressTopGamesWidget");')); // Register the widget: ArcadePressTopGamesWidget
 	add_action('widgets_init', create_function('', 'return register_widget("ArcadePressRecentGamesWidget");')); // Register the widget: ArcadePressRecentGamesWidget
+	add_action('widgets_init', create_function('', 'return register_widget("ArcadePressCategoryGamesWidget");'));
 	add_shortcode('arcadepress', array(&$arcadePress, 'arcadepress_mainshortcode'));
 	add_action('admin_head', array(&$arcadePress, 'placeAdminHeaderCode'), 1); // Place ArcadePress comment into header
  

@@ -4,11 +4,9 @@ Donate link: http://www.skybox3d.com/store/products/arcadepress-open-source-word
 Tags: arcade, game, games, gaming, cms, flash, flashgames, arcade script, arcade-script, arcadepress
 Requires at least: 2.8.0
 Tested up to: 2.9.2
-Stable tag: 0.62
+Stable tag: 0.65
 
 == Description ==
-
-**THIS PLUGIN IS IN HEAVY DEVELOPMENT!  NOT ALL FEATURES ARE FUNCTIONAL**
 
 ArcadePress is an open source arcade plugin for Wordpress that allows you to turn any Wordpress site into a full arcade site, including flash game uploads, categories, highscores, game feeds & more.
 
@@ -19,7 +17,7 @@ anything they can dream of.  To that end, we have started work on ArcadePress, a
 you can literally setup a full flash arcade website with just a few clicks of the mouse.  Combining the powers of a 
 modern PHP arcade script with extreme versatility of the Wordpress platform and it's massive developer base.
 
-Here's what we have done in version 0.62:
+Here's what we have done in version 0.65:
 * Add games from the admin panel
 * Edit games from the admin panel
 * Basic set of options including alternate content, game display options, etc.
@@ -43,8 +41,6 @@ feature set is as follows:
 * Eventually, we would like to also include optional full ArcadePress installations (Wordpress plus ArcadePress pre-installed) along with several custom designed Wordpress themes designed exxclusively for use with ArcadePress
 
 == Installation ==
-
-**THIS PLUGIN IS IN HEAVY DEVELOPMENT!  NOT ALL FEATURES ARE FUNCTIONAL**
 
 The recommended way to install ArcadePress is to go into the Wordpress admin panel, and click on Add New under the 
 Plugins menu.  Search for ArcadePress, and then click on Install, then click Install Now.  Once the installation 
@@ -109,11 +105,17 @@ from feeds, full game management, and much more.
 
 == Changelog ==
 
+= 0.65 =
+* "Use categories?" option was added to ArcadePress General Options
+* Added shortcode: [arcadepress display="categories"] which displays a link to each game category in a list.
+* Added category list widget
+* Added shortcode: [arcadepress category="Action"] which will list games from a specific category, in the example, games from the Action category are listed.  You can also use usepictures, usetext, and quantity, just like you can with the other shortcodes.  For example, to display upto 20 games from the Adventure category using only thumbnails and no text, your shortcode would look like this: [arcadepress category="Adeventure" quantity="20" useimages="true" usetext="false"]
+
 = 0.62 =
-Fixed issue with admin pages being unnaccessible
+* Fixed issue with admin pages being unnaccessible
 
 = 0.61 =
-No changes
+* No changes
 
 = 0.6.0 =
 * Had used 0.52 instead of 0.5.2, meaning I had to go up to 0.6.0 in order for the update to show as needed in the admin panel
